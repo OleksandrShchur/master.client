@@ -1,0 +1,17 @@
+.order{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-content: stretch;
+    justify-content: space-around;
+    align-items: baseline;
+}
+
+.vertical {
+    display: flex;
+    flex-direction: column;
+}
+
+.left-spacing{
+    padding-left: 50px;
+}

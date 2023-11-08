@@ -14,33 +14,33 @@ export const Sidebar: React.FC = () => {
             }}
             items={[
               {
-                title: 'Dashboard',
+                title: 'Рівняння',
                 itemId: '/dashboard'
               },
-              {
-                title: 'Management',
-                itemId: '/management',
-                subNav: [
-                  {
-                    title: 'Projects',
-                    itemId: '/management/projects',
-                  },
-                  {
-                    title: 'Members',
-                    itemId: '/management/members',
-                  },
-                ],
-              },
-              {
-                title: 'Another Item',
-                itemId: '/another',
-                subNav: [
-                  {
-                    title: 'Teams',
-                    itemId: '/management/teams',
-                  },
-                ],
-              },
+              // {
+              //   title: 'Management',
+              //   itemId: '/management',
+              //   subNav: [
+              //     {
+              //       title: 'Projects',
+              //       itemId: '/management/projects',
+              //     },
+              //     {
+              //       title: 'Members',
+              //       itemId: '/management/members',
+              //     },
+              //   ],
+              // },
+              // {
+              //   title: 'Another Item',
+              //   itemId: '/another',
+              //   subNav: [
+              //     {
+              //       title: 'Teams',
+              //       itemId: '/management/teams',
+              //     },
+              //   ],
+              // },
             ]}
           />
       </>
