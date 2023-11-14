@@ -15,14 +15,12 @@ const columns: GridColDef[] = [
       headerName: 'Значення X',
       width: 160,
       valueGetter: (params: GridValueGetterParams) => 
-        `${params.row.x.toFixed(8)}`,
-      editable: true,
+        `${params.row.x.toFixed(8)}`
     },
     {
       field: 'y',
       headerName: 'Значення Y',
       description: 'This column has a value getter and is not sortable.',
-      editable: true,
       width: 160,
       valueGetter: (params: GridValueGetterParams) => 
       `${params.row.y.toFixed(8)}`,
@@ -71,7 +69,7 @@ export const SecondOrder: React.FC = () => {
     };
 
     return (
-        <Box sx={{ height: '100%', width: '60%' }} className='order'>
+        <Box sx={{ height: '100vh', width: '60%', overflow: 'auto' }} className='order'>
           <DataGrid
             rows={rows}
             columns={columns}
@@ -82,7 +80,7 @@ export const SecondOrder: React.FC = () => {
                 },
               },
             }}
-            pageSizeOptions={[10, 20]}
+            pageSizeOptions={[10, 50, 100]}
             disableRowSelectionOnClick
           />
           <div className='vertical left-spacing' style={{
