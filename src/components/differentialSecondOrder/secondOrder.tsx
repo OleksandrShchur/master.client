@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
 import Box from '@mui/material/Box';
 import api from '../../services/apiService';
@@ -6,20 +6,22 @@ import { IGridItem } from '../../models/IGridItem';
 import { Button, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, TextField } from '@mui/material';
 import { ISecondOrderParams } from '../../models/ISecondOrderParams';
 import { Methods } from '../../models/enums/Methods';
+import { MathComponent } from "mathjax-react";
+import './secondOrder.css';
 
 const columns: GridColDef[] = [
-    { field: 'value', headerName: 'Точка', width: 120, valueGetter: (params: GridValueGetterParams) => 
-        `${params.row.value.toFixed(6)}` },
+    { field: 'value', headerName: 'Точка', width: 100, valueGetter: (params: GridValueGetterParams) => 
+        `${params.row.value.toFixed(4)}` },
     {
       field: 'x',
-      headerName: 'Значення X',
+      headerName: 'Точне значення',
       width: 160,
       valueGetter: (params: GridValueGetterParams) => 
         `${params.row.x.toFixed(8)}`
     },
     {
       field: 'y',
-      headerName: 'Значення Y',
+      headerName: 'Наближене значення',
       description: 'This column has a value getter and is not sortable.',
       width: 160,
       valueGetter: (params: GridValueGetterParams) => 
@@ -29,22 +31,29 @@ const columns: GridColDef[] = [
 
 export const SecondOrder: React.FC = () => {
     const [rows, setRows] = useState<IGridItem[]>([] as IGridItem[]);
-    const [h, setH] = useState<number>(0);
-    const [t_0, setT_0] = useState<number>(0);
-    const [t_end, setT_end] = useState<number>(0);
-    const [y_0, setY_0] = useState<number>(0);
-    const [y_1, setY_1] = useState<number>(0);
+    const [step, setStep] = useState<number | undefined>();
+    const [t_0, setT_0] = useState<number>();
+    const [t_end, setT_end] = useState<number>();
+    const [alpha, setAlpha] = useState<number>();
+    const [beta, setBeta] = useState<number>();
+    const [tau, setTau] = useState<number>();
+
+    const [f_func, setF_func] = useState<string>('');
+    const [phi_func, setPhi_func] = useState<string>('');
 
     const [method, setMethod] = useState<Methods>(Methods.euler);
 
     const fetchData = async () => {
       const request: ISecondOrderParams = {
-        h: h,
         t_0: t_0,
         t_end: t_end,
-        y_0: y_0,
-        y_1: y_1,
-        method: method
+        alpha: alpha,
+        beta: beta,
+        tau: tau,
+        step: step,
+        method: method,
+        f_func: f_func,
+        phi_func: phi_func
       };
 
       const response = await api.post('second-order/euler', request);
@@ -86,7 +95,8 @@ export const SecondOrder: React.FC = () => {
           <div className='vertical left-spacing' style={{
               display: 'flex',
               flexDirection: 'column',
-              paddingLeft: '50px'
+              paddingLeft: '50px',
+              width: '60vh'
             }}>
               <FormControl>
               <FormLabel id="demo-radio-buttons-group-label">Метод розв'язування</FormLabel>
@@ -102,20 +112,36 @@ export const SecondOrder: React.FC = () => {
                 <FormControlLabel value={Methods.runge} control={<Radio />} label="Метод Рунге-Кутти" />
               </RadioGroup>
             </FormControl>
-            <TextField id="standard-basic" label="y0" variant="standard"  value={y_0} onChange={(e: any) => setY_0(e.target.value)} />
-            <TextField id="standard-basic" label="y1" variant="standard"  value={y_1} onChange={(e: any) => setY_1(e.target.value)} />
-            <TextField id="standard-basic" label="Крок: h" variant="standard"  value={h} onChange={(e: any) => setH(e.target.value)} />
-            <TextField id="standard-basic" label="Початок відрізку: t_0" variant="standard" value={t_0} onChange={(e: any) => setT_0(e.target.value)} />
-            <TextField id="standard-basic" label="Кінець відрізку: t_end" variant="standard" value={t_end} onChange={(e: any) => setT_end(e.target.value)} />
+
+            <div>
+              <div className='equation'>
+                <MathComponent tex={String.raw`x'(t)=`} />
+                <input required placeholder='α' onChange={(e: any) => setAlpha(e.target.value)} style={{ width: '36px'}} />
+                <MathComponent tex={String.raw`x(t)+`} />
+                <input required placeholder='β' onChange={(e: any) => setBeta(e.target.value)} style={{ width: '36px'}} />
+                <MathComponent tex={String.raw`x(t-`} />
+                <input required placeholder='τ' onChange={(e: any) => setTau(e.target.value)} style={{ width: '36px'}} />
+                <MathComponent tex={String.raw`)+`} />
+                <input placeholder='f(x)' onChange={(e: any) => setF_func(e.target.value)} style={{ width: '72px'}} />
+              </div>
+              <div className='equation'>
+              <MathComponent tex={String.raw`t ∈ [`} />
+                <input required placeholder='t_0' value={t_0} onChange={(e: any) => setT_0(e.target.value)} style={{ width: '36px'}} />
+                <MathComponent tex={String.raw`;`} />
+                <input required placeholder='t' value={t_end} onChange={(e: any) => setT_end(e.target.value)} style={{ width: '36px'}} />
+                <MathComponent tex={String.raw`]`} />
+                <MathComponent tex={String.raw`,h=`} />
+                <input required placeholder='h' value={step} onChange={(e: any) => setStep(e.target.value)} style={{ width: '42px'}} />
+              </div>
+              <div className='equation'>
+                <MathComponent tex={String.raw`x(t)=`} />
+                <input placeholder='φ(t)' onChange={(e: any) => setPhi_func(e.target.value)} style={{ width: '72px'}} />
+              </div>
+            </div>
+
             <br />
-            <Button variant="contained" onClick={() => calculate()}>Обчислити</Button>
+              <Button variant="contained" onClick={() => calculate()}>Обчислити</Button>
             <br />
-            <span>
-              Формула
-            </span>
-            <span>
-              d^2*y / dt^2 = -2 * dy / dt - 3 * y
-            </span>
           </div>
         </Box>
       );

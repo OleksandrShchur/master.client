@@ -1,17 +1,28 @@
-.order{
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    align-content: stretch;
-    justify-content: space-around;
-    align-items: baseline;
+.equation input {
+    width: 36px;
+    height: 24px;
+    font-size: medium;
+    border-top: 0;
+    border-right: 0;
+    border-left: 0;
+    text-align: center; 
 }
 
-.vertical {
-    display: flex;
-    flex-direction: column;
+.equation input:focus {
+    outline: none !important;
 }
 
-.left-spacing{
-    padding-left: 50px;
+.equation mjx-container {
+    text-align: left !important;
+}
+
+.equation {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+::placeholder {
+    text-align: center; 
+    font: 1.25rem/3 sans-serif;
 }
