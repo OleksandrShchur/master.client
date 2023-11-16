@@ -1,6 +1,7 @@
 export interface IGridItem {
     id: number;
     value: number;
-    x: number;
-    y: number;
+    tochne: number;
+    euler: number;
+    kutta: number;
 }

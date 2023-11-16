@@ -7,7 +7,6 @@ export interface ISecondOrderParams {
     alpha: number | undefined;
     beta: number | undefined;
     tau: number | undefined;
-    method: Methods;
     f_func: string | undefined;
     phi_func: string | undefined;
 }
