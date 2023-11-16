@@ -143,11 +143,11 @@ export const SecondOrder: React.FC = () => {
               <form onSubmit={(event: any) => handleSubmit(event)}>
                 <div className='equation'>
                   <MathComponent tex={String.raw`x'(t)=`} />
-                  <input required placeholder='α' onChange={(e: any) => setAlpha(e.target.value)} pattern="[0-9]*" style={{ width: '36px'}} />
+                  <input required placeholder='α' value={alpha} onChange={(e: any) => setAlpha(e.target.value)} pattern="[0-9]*" style={{ width: '36px'}} />
                   <MathComponent tex={String.raw`x(t)+`} />
-                  <input required placeholder='β' onChange={(e: any) => setBeta(e.target.value)} style={{ width: '36px'}} />
+                  <input required placeholder='β' value={beta} onChange={(e: any) => setBeta(e.target.value)} style={{ width: '36px'}} />
                   <MathComponent tex={String.raw`x(t-`} />
-                  <input required placeholder='τ' onChange={(e: any) => setTau(e.target.value)} style={{ width: '36px'}} />
+                  <input required placeholder='τ' value={tau} onChange={(e: any) => setTau(e.target.value)} style={{ width: '36px'}} />
                   <MathComponent tex={String.raw`)+`} />
                   <input placeholder='f(x)' value={f_func} onChange={(e: any) => setF_func(e.target.value)} style={{ width: '72px'}} />
                 </div>
