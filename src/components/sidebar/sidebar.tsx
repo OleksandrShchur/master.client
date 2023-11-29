@@ -2,47 +2,32 @@ import React from 'react';
 
 import { Navigation } from 'react-minimal-side-navigation';
 import 'react-minimal-side-navigation/lib/ReactMinimalSideNavigation.css';
+import './sidebar.css';
 
 export const Sidebar: React.FC = () => {
     return (
-      <>
+      <div className='sidebar'>
         <Navigation
             // you can use your own router's api to get pathname
-            activeItemId="/management/members"
+            activeItemId="/equation-with-delay"
             onSelect={({itemId}) => {
               // maybe push to the route
             }}
             items={[
               {
-                title: 'Рівняння',
-                itemId: '/dashboard'
+                title: 'Диференціально-різницеве рівняння із запізненням',
+                itemId: '/equation-with-delay'
               },
               // {
-              //   title: 'Management',
-              //   itemId: '/management',
-              //   subNav: [
-              //     {
-              //       title: 'Projects',
-              //       itemId: '/management/projects',
-              //     },
-              //     {
-              //       title: 'Members',
-              //       itemId: '/management/members',
-              //     },
-              //   ],
+              //   title: 'Диференціальне рівняння 1-го порядку',
+              //   itemId: '/first-order'
               // },
               // {
-              //   title: 'Another Item',
-              //   itemId: '/another',
-              //   subNav: [
-              //     {
-              //       title: 'Teams',
-              //       itemId: '/management/teams',
-              //     },
-              //   ],
-              // },
+              //   title: 'Диференціальне рівняння 2-го порядку',
+              //   itemId: '/second-order'
+              // }
             ]}
           />
-      </>
+      </div>
     );
 }

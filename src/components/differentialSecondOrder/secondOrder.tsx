@@ -3,9 +3,8 @@ import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
 import Box from '@mui/material/Box';
 import api from '../../services/apiService';
 import { IGridItem } from '../../models/IGridItem';
-import { Alert, Button, FormControl, FormControlLabel, FormLabel, LinearProgress, Radio, RadioGroup, Snackbar } from '@mui/material';
+import { Alert, Button, LinearProgress, Snackbar } from '@mui/material';
 import { ISecondOrderParams } from '../../models/ISecondOrderParams';
-import { Methods } from '../../models/enums/Methods';
 import { MathComponent } from "mathjax-react";
 import './secondOrder.css';
 
@@ -84,7 +83,7 @@ export const SecondOrder: React.FC = () => {
 
         let data: IGridItem[] = [];
         let i = 1;
-        console.log(response);
+        
         response.data.forEach((el: any) => {
             data.push({
                 id: i++,
@@ -110,6 +109,7 @@ export const SecondOrder: React.FC = () => {
 
     const handleSubmit = (event: any) => {
       console.log(event);
+      calculate();
       event.preventDefault();
     }
 
@@ -132,6 +132,7 @@ export const SecondOrder: React.FC = () => {
               }}
               pageSizeOptions={[10, 50, 100]}
               disableRowSelectionOnClick
+              localeText={ { noRowsLabel: '' } }
             />
             <div className='vertical left-spacing' style={{
                 display: 'flex',
@@ -143,31 +144,30 @@ export const SecondOrder: React.FC = () => {
               <form onSubmit={(event: any) => handleSubmit(event)}>
                 <div className='equation'>
                   <MathComponent tex={String.raw`x'(t)=`} />
-                  <input required placeholder='α' onChange={(e: any) => setAlpha(e.target.value)} pattern="[0-9]*" style={{ width: '36px'}} />
+                  <input className='input-value' required placeholder='α' value={alpha} onChange={(e: any) => setAlpha(e.target.value)} pattern="[0-9]*" style={{ width: '36px'}} />
                   <MathComponent tex={String.raw`x(t)+`} />
-                  <input required placeholder='β' onChange={(e: any) => setBeta(e.target.value)} style={{ width: '36px'}} />
+                  <input className='input-value' required placeholder='β' value={beta} onChange={(e: any) => setBeta(e.target.value)} style={{ width: '36px'}} />
                   <MathComponent tex={String.raw`x(t-`} />
-                  <input required placeholder='τ' onChange={(e: any) => setTau(e.target.value)} style={{ width: '36px'}} />
+                  <input className='input-value' required placeholder='τ' value={tau} onChange={(e: any) => setTau(e.target.value)} style={{ width: '36px'}} />
                   <MathComponent tex={String.raw`)+`} />
-                  <input placeholder='f(x)' value={f_func} onChange={(e: any) => setF_func(e.target.value)} style={{ width: '72px'}} />
+                  <input className='input-value' placeholder='f(x)' value={f_func} onChange={(e: any) => setF_func(e.target.value)} style={{ width: '72px'}} />
                 </div>
                 <div className='equation'>
                 <MathComponent tex={String.raw`t ∈ [`} />
-                  <input required placeholder='t_0' value={t_0} onChange={(e: any) => setT_0(e.target.value)} style={{ width: '36px'}} />
+                  <input className='input-value' required placeholder='t_0' value={t_0} onChange={(e: any) => setT_0(e.target.value)} style={{ width: '36px'}} />
                   <MathComponent tex={String.raw`;`} />
-                  <input required placeholder='t' value={t_end} onChange={(e: any) => setT_end(e.target.value)} style={{ width: '36px'}} />
+                  <input className='input-value' required placeholder='t' value={t_end} onChange={(e: any) => setT_end(e.target.value)} style={{ width: '36px'}} />
                   <MathComponent tex={String.raw`]`} />
                   <MathComponent tex={String.raw`,h=`} />
-                  <input required placeholder='h' value={step} onChange={(e: any) => setStep(e.target.value)} style={{ width: '48px'}} />
+                  <input className='input-value' required placeholder='h' value={step} onChange={(e: any) => setStep(e.target.value)} style={{ width: '48px'}} />
                 </div>
                 <div className='equation'>
                   <MathComponent tex={String.raw`x(t)=`} />
-                  <input placeholder='φ(t)' value={phi_func} onChange={(e: any) => setPhi_func(e.target.value)} style={{ width: '72px'}} />
+                  <input className='input-value' placeholder='φ(t)' value={phi_func} onChange={(e: any) => setPhi_func(e.target.value)} style={{ width: '72px'}} />
                 </div>
 
                 <br />
-                {/* <input type="submit" value="Submit" /> */}
-                <Button variant="contained" onClick={() => calculate()}>Обчислити</Button>
+                <input type="submit" value="Обчислити" className='button-submit' />
                 <br />
               </form>
             </div>
