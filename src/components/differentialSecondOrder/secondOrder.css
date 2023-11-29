@@ -101,3 +101,7 @@
 .css-pdct74-MuiTablePagination-selectLabel {
   display: none !important;
 }
+
+.MuiDataGrid-columnHeaderTitle {
+  font-weight: bold !important;
+}
