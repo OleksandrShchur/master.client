@@ -33,12 +33,20 @@ const columns: GridColDef[] = [
     width: 200,
     valueGetter: (params: GridValueGetterParams) => 
     `${params.row.kutta.toFixed(8)}`,
+  },
+  {
+    field: 'auto',
+    headerName: 'Автоматизований метод кроків',
+    description: 'This column has a value getter and is not sortable.',
+    width: 220,
+    valueGetter: (params: GridValueGetterParams) => 
+    `${params.row.auto.toFixed(8)}`,
   }
 ];
 
 export const SecondOrder: React.FC = () => {
     const [rows, setRows] = useState<IGridItem[]>([] as IGridItem[]);
-    const [step, setStep] = useState<number | undefined>(0.001);
+    const [step, setStep] = useState<number | undefined>(100);
     const [t_0, setT_0] = useState<number>(0);
     const [t_end, setT_end] = useState<number>(2);
     const [alpha, setAlpha] = useState<number>(1);
@@ -90,7 +98,8 @@ export const SecondOrder: React.FC = () => {
                 value: el[0],
                 tochne: el[1],
                 euler: el[2],
-                kutta: el[3]
+                kutta: el[3],
+                auto: el[4]
             });
         });
 
@@ -137,18 +146,18 @@ export const SecondOrder: React.FC = () => {
             <div className='vertical left-spacing' style={{
                 display: 'flex',
                 flexDirection: 'column',
-                paddingLeft: '50px',
+                paddingLeft: '20px',
                 width: '60vh'
               }}>
 
               <form onSubmit={(event: any) => handleSubmit(event)}>
                 <div className='equation'>
                   <MathComponent tex={String.raw`x'(t)=`} />
-                  <input className='input-value' required placeholder='α' value={alpha} onChange={(e: any) => setAlpha(e.target.value)} pattern="[0-9]*" style={{ width: '36px'}} />
+                  <input required placeholder='α' value={alpha} onChange={(e: any) => setAlpha(e.target.value)} pattern="[0-9]*" style={{ width: '36px'}} />
                   <MathComponent tex={String.raw`x(t)+`} />
-                  <input className='input-value' required placeholder='β' value={beta} onChange={(e: any) => setBeta(e.target.value)} style={{ width: '36px'}} />
+                  <input required placeholder='β' value={beta} onChange={(e: any) => setBeta(e.target.value)} style={{ width: '36px'}} />
                   <MathComponent tex={String.raw`x(t-`} />
-                  <input className='input-value' required placeholder='τ' value={tau} onChange={(e: any) => setTau(e.target.value)} style={{ width: '36px'}} />
+                  <input required placeholder='τ' value={tau} onChange={(e: any) => setTau(e.target.value)} style={{ width: '36px'}} />
                   <MathComponent tex={String.raw`)+`} />
                   <input className='input-value' placeholder='f(x)' value={f_func} onChange={(e: any) => setF_func(e.target.value)} style={{ width: '72px'}} />
                 </div>
