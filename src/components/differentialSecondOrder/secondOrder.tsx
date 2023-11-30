@@ -34,12 +34,20 @@ const columns: GridColDef[] = [
     width: 200,
     valueGetter: (params: GridValueGetterParams) => 
     `${params.row.kutta.toFixed(8)}`,
+  },
+  {
+    field: 'auto',
+    headerName: 'Автоматизований метод кроків',
+    description: 'This column has a value getter and is not sortable.',
+    width: 220,
+    valueGetter: (params: GridValueGetterParams) => 
+    `${params.row.auto.toFixed(8)}`,
   }
 ];
 
 export const SecondOrder: React.FC = () => {
     const [rows, setRows] = useState<IGridItem[]>([] as IGridItem[]);
-    const [step, setStep] = useState<number | undefined>(0.001);
+    const [step, setStep] = useState<number | undefined>(100);
     const [t_0, setT_0] = useState<number>(0);
     const [t_end, setT_end] = useState<number>(2);
     const [alpha, setAlpha] = useState<number>(1);
@@ -91,7 +99,8 @@ export const SecondOrder: React.FC = () => {
                 value: el[0],
                 tochne: el[1],
                 euler: el[2],
-                kutta: el[3]
+                kutta: el[3],
+                auto: el[4]
             });
         });
 
@@ -136,7 +145,7 @@ export const SecondOrder: React.FC = () => {
             <div className='vertical left-spacing' style={{
                 display: 'flex',
                 flexDirection: 'column',
-                paddingLeft: '50px',
+                paddingLeft: '20px',
                 width: '60vh'
               }}>
 

@@ -4,4 +4,5 @@ export interface IGridItem {
     tochne: number;
     euler: number;
     kutta: number;
+    auto: number;
 }
