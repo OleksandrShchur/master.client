@@ -9,4 +9,5 @@ export interface ISecondOrderParams {
     tau: number | undefined;
     f_func: string | undefined;
     phi_func: string | undefined;
+    linear: boolean | undefined;
 }
