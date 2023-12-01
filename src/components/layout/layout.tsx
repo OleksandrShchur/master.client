@@ -10,7 +10,6 @@ import './layout.css';
 export const Layout: React.FC = () => {
     return (
         <div className='order'>
-            <Sidebar />
             <Routes>
                 <Route path="/" element={<SecondOrder />} />
                 <Route path="/equation-with-delay" element={<SecondOrder />} />
