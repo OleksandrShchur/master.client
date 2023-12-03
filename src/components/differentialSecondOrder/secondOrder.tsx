@@ -221,10 +221,10 @@ export const SecondOrder: React.FC = () => {
 
             <div>
               <FormControl sx={{ m: 1, width: 610 }}>
-                <InputLabel id="demo-multiple-checkbox-label">Видимі колонки</InputLabel>
+                <InputLabel id="multiple-checkbox-label">Видимі колонки</InputLabel>
                 <Select
-                  labelId="demo-multiple-checkbox-label"
-                  id="demo-multiple-checkbox"
+                  labelId="multiple-checkbox-label"
+                  id="multiple-checkbox"
                   multiple
                   value={visibleColumns}
                   onChange={handleVisibleColumnChange}
