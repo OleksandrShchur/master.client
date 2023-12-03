@@ -3,15 +3,26 @@ import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
 import Box from '@mui/material/Box';
 import api from '../../services/apiService';
 import { IGridItem } from '../../models/IGridItem';
-import { Alert, Button, FormControlLabel, LinearProgress, Radio, Snackbar, RadioGroup } from '@mui/material';
+import { Alert, FormControlLabel, LinearProgress, Radio, Snackbar, RadioGroup, FormControl, Select, MenuItem, ListItemText, Checkbox, OutlinedInput, InputLabel, SelectChangeEvent } from '@mui/material';
 import { ISecondOrderParams } from '../../models/ISecondOrderParams';
 import { MathComponent } from "mathjax-react";
 import './secondOrder.css';
 
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 6 + ITEM_PADDING_TOP,
+      width: 540,
+    },
+  },
+};
+
 const columns: GridColDef[] = [
   {
     field: 'value', headerName: 'Точка', width: 100, valueGetter: (params: GridValueGetterParams) =>
-      `${params.row.value.toFixed(4)}`
+      `${params.row.value.toFixed(4)}`, pinnable: true
   },
   {
     field: 'tochne',
@@ -22,17 +33,17 @@ const columns: GridColDef[] = [
   },
   {
     field: 'euler',
-    headerName: 'Значення методу Ейлера',
+    headerName: 'Метод Ейлера',
     description: 'This column has a value getter and is not sortable.',
-    width: 200,
+    width: 160,
     valueGetter: (params: GridValueGetterParams) =>
       `${params.row.euler.toFixed(8)}`,
   },
   {
     field: 'kutta',
-    headerName: 'Значення методу РК4',
+    headerName: 'Метод РК4',
     description: 'This column has a value getter and is not sortable.',
-    width: 200,
+    width: 160,
     valueGetter: (params: GridValueGetterParams) =>
       `${params.row.kutta.toFixed(8)}`,
   },
@@ -46,7 +57,16 @@ const columns: GridColDef[] = [
   }
 ];
 
+const availableColumns: string[] = [
+  'Точне значення',
+  'Метод Ейлера',
+  'Метод РК4',
+  'Автоматизований метод кроків'
+];
+
 export const SecondOrder: React.FC = () => {
+  const [visibleColumns, setVisibleColumns] = React.useState<string[]>(availableColumns);
+
   const [rows, setRows] = useState<IGridItem[]>([] as IGridItem[]);
   const [step, setStep] = useState<number | undefined>(100);
   const [t_0, setT_0] = useState<number>(0);
@@ -126,9 +146,19 @@ export const SecondOrder: React.FC = () => {
     event.preventDefault();
   }
 
+  const handleVisibleColumnChange = (event: SelectChangeEvent<typeof visibleColumns>) => {
+    const {
+      target: { value },
+    } = event;
+    setVisibleColumns(
+      // On autofill we get a stringified value.
+      typeof value === 'string' ? value.split(',') : value,
+    );
+  };
+
   return (
     <>
-      <Box sx={{ height: '97vh', width: '90%', overflow: 'auto' }} className='order'>
+      <Box sx={{ height: '97vh', width: '100%', overflow: 'auto' }} className='order'>
         <DataGrid
           slots={{
             loadingOverlay: LinearProgress,
@@ -145,13 +175,13 @@ export const SecondOrder: React.FC = () => {
           }}
           pageSizeOptions={[10, 50, 100]}
           disableRowSelectionOnClick
-          localeText={ { noRowsLabel: '' } }
+          localeText={{ noRowsLabel: '' }}
         />
         <div className='vertical left-spacing' style={{
           display: 'flex',
           flexDirection: 'column',
           paddingLeft: '20px',
-          width: '60vh'
+          width: '90vh'
         }}>
 
           <form onSubmit={(event: any) => handleSubmit(event)} className='form-styles'>
@@ -189,9 +219,32 @@ export const SecondOrder: React.FC = () => {
               <FormControlLabel value={false} control={<Radio />} label="Нелінійне ДРР" />
             </RadioGroup>
 
-            <br />
-            <input type="submit" value="Обчислити" className='button-submit' />
-            <br />
+            <div>
+              <FormControl sx={{ m: 1, width: 610 }}>
+                <InputLabel id="demo-multiple-checkbox-label">Видимі колонки</InputLabel>
+                <Select
+                  labelId="demo-multiple-checkbox-label"
+                  id="demo-multiple-checkbox"
+                  multiple
+                  value={visibleColumns}
+                  onChange={handleVisibleColumnChange}
+                  input={<OutlinedInput label="Видимі колонки" />}
+                  renderValue={(selected) => selected.join(', ')}
+                  MenuProps={MenuProps}
+                >
+                  {availableColumns.map((column) => (
+                    <MenuItem key={column} value={column}>
+                      <Checkbox checked={visibleColumns.indexOf(column) > -1} />
+                      <ListItemText primary={column} />
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </div>
+
+            <div>
+              <input type="submit" value="Обчислити" className='button-submit' />
+            </div>
           </form>
         </div>
       </Box>
