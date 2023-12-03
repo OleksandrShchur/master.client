@@ -3,6 +3,7 @@ import { Box, Modal, Typography } from '@mui/material';
 import { style } from './diagramModal.styles';
 import Plot from 'react-plotly.js';
 import { IGridItem } from '../../models/IGridItem';
+import './diagramModal.css';
 
 const sample = [-10, 10, 30, 50, 70, 90, 100];
 
@@ -52,6 +53,8 @@ export const DiagramModal: React.FC<DiagramModalProps> = (props: DiagramModalPro
                     layout={{
                         datarevision: 0,
                     }}
+                    revision={0}
+                    style={{ width: '100%', height: '100%' }}
                 />
             </Box>
         </Modal>
