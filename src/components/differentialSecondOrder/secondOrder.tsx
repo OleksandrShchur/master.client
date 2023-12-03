@@ -1,23 +1,15 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
 import Box from '@mui/material/Box';
 import api from '../../services/apiService';
 import { IGridItem } from '../../models/IGridItem';
-import { Alert, FormControlLabel, LinearProgress, Radio, Snackbar, RadioGroup, FormControl, Select, MenuItem, ListItemText, Checkbox, OutlinedInput, InputLabel, SelectChangeEvent } from '@mui/material';
+import { Alert, FormControlLabel, LinearProgress, Radio, Snackbar, RadioGroup, FormControl, Checkbox, FormLabel, FormGroup } from '@mui/material';
+import ControlPointOutlinedIcon from '@mui/icons-material/ControlPointOutlined';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { ISecondOrderParams } from '../../models/ISecondOrderParams';
 import { MathComponent } from "mathjax-react";
 import './secondOrder.css';
-
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 6 + ITEM_PADDING_TOP,
-      width: 540,
-    },
-  },
-};
+import { DiagramModal } from '../diagramModal/diagramModal';
 
 const columns: GridColDef[] = [
   {
@@ -57,15 +49,14 @@ const columns: GridColDef[] = [
   }
 ];
 
-const availableColumns: string[] = [
-  'Точне значення',
-  'Метод Ейлера',
-  'Метод РК4',
-  'Автоматизований метод кроків'
-];
-
 export const SecondOrder: React.FC = () => {
-  const [visibleColumns, setVisibleColumns] = React.useState<string[]>(availableColumns);
+  const [visibleColumns, setVisibleColumns] = React.useState({
+    exactValue: true,
+    euler: true,
+    rk4: true,
+    automation: true
+  });
+  const { exactValue, euler, rk4, automation } = visibleColumns;
 
   const [rows, setRows] = useState<IGridItem[]>([] as IGridItem[]);
   const [step, setStep] = useState<number | undefined>(100);
@@ -83,6 +74,8 @@ export const SecondOrder: React.FC = () => {
   const [alertOpen, setAlertOpen] = useState<boolean>(false);
   const [alertMessage, setAlertMessage] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
+
+  const [diagramModalVisible, setDiagramModalVisible] = useState<boolean>(false);
 
   const handleAlertClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway') {
@@ -146,15 +139,16 @@ export const SecondOrder: React.FC = () => {
     event.preventDefault();
   }
 
-  const handleVisibleColumnChange = (event: SelectChangeEvent<typeof visibleColumns>) => {
-    const {
-      target: { value },
-    } = event;
-    setVisibleColumns(
-      // On autofill we get a stringified value.
-      typeof value === 'string' ? value.split(',') : value,
-    );
+  const handleVisibleColumnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setVisibleColumns({
+      ...visibleColumns,
+      [event.target.name]: event.target.checked,
+    });
   };
+
+  const handleModalVisible = () => {
+    setDiagramModalVisible(!diagramModalVisible);
+  }
 
   return (
     <>
@@ -215,34 +209,46 @@ export const SecondOrder: React.FC = () => {
               name="radio-buttons-group"
               onChange={(e: any) => setLinear(e.target.value)}
             >
-              <FormControlLabel value={true} control={<Radio />} label="Лінійне ДРР" />
-              <FormControlLabel value={false} control={<Radio />} label="Нелінійне ДРР" />
+              <FormControlLabel value={true} control={<Radio color='secondary' />} label="Лінійне ДРР" />
+              <FormControlLabel value={false} control={<Radio color='secondary' />} label="Нелінійне ДРР" />
             </RadioGroup>
 
-            <div>
-              <FormControl sx={{ m: 1, width: 610 }}>
-                <InputLabel id="multiple-checkbox-label">Видимі колонки</InputLabel>
-                <Select
-                  labelId="multiple-checkbox-label"
-                  id="multiple-checkbox"
-                  multiple
-                  value={visibleColumns}
-                  onChange={handleVisibleColumnChange}
-                  input={<OutlinedInput label="Видимі колонки" />}
-                  renderValue={(selected) => selected.join(', ')}
-                  MenuProps={MenuProps}
-                >
-                  {availableColumns.map((column) => (
-                    <MenuItem key={column} value={column}>
-                      <Checkbox checked={visibleColumns.indexOf(column) > -1} />
-                      <ListItemText primary={column} />
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </div>
+            <div><FormControl sx={{ m: 3 }} component="fieldset" variant="standard">
+              <FormLabel component="legend">Видимі колонки</FormLabel>
+              <FormGroup>
+                <FormControlLabel
+                  control={
+                    <Checkbox checked={exactValue} icon={<ControlPointOutlinedIcon />}
+                      checkedIcon={<AddCircleIcon />} color='secondary' onChange={handleVisibleColumnChange} name="exactValue" />
+                  }
+                  label="Точне значення"
+                />
+                <FormControlLabel
+                  control={
+                    <Checkbox checked={euler} icon={<ControlPointOutlinedIcon />}
+                      checkedIcon={<AddCircleIcon />} color="secondary" onChange={handleVisibleColumnChange} name="euler" />
+                  }
+                  label="Метод Ейлера"
+                />
+                <FormControlLabel
+                  control={
+                    <Checkbox checked={rk4} icon={<ControlPointOutlinedIcon />}
+                      checkedIcon={<AddCircleIcon />} color="secondary" onChange={handleVisibleColumnChange} name="rk4" />
+                  }
+                  label="Метод РК4"
+                />
+                <FormControlLabel
+                  control={
+                    <Checkbox checked={automation} icon={<ControlPointOutlinedIcon />}
+                      checkedIcon={<AddCircleIcon />} color="secondary" onChange={handleVisibleColumnChange} name="automation" />
+                  }
+                  label="Автоматизований метод кроків"
+                />
+              </FormGroup>
+            </FormControl></div>
 
-            <div>
+            <div className='submin-container'>
+              <input type="button" value="Графік" className='button-submit' onClick={handleModalVisible} />
               <input type="submit" value="Обчислити" className='button-submit' />
             </div>
           </form>
@@ -253,6 +259,8 @@ export const SecondOrder: React.FC = () => {
           {alertMessage}
         </Alert>
       </Snackbar>
+
+      <DiagramModal handleClose={handleModalVisible} visible={diagramModalVisible} />
     </>
   );
 }
