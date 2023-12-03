@@ -85,10 +85,6 @@ export const SecondOrder: React.FC = () => {
     setAlertOpen(false);
   };
 
-  const validateForm = () => {
-    return true;
-  }
-
   const fetchData = async () => {
     try {
       setLoading(true);
@@ -260,7 +256,7 @@ export const SecondOrder: React.FC = () => {
         </Alert>
       </Snackbar>
 
-      <DiagramModal handleClose={handleModalVisible} visible={diagramModalVisible} />
+      <DiagramModal handleClose={handleModalVisible} visible={diagramModalVisible} data={rows} />
     </>
   );
 }
