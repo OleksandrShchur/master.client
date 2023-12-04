@@ -66,10 +66,12 @@ export const SecondOrder: React.FC = () => {
   const [beta, setBeta] = useState<number>(-3);
   const [tau, setTau] = useState<number>(1);
 
+  const f_func_linearPlaceholder = 'f(t)';
+  const f_func_nonLinearPlaceHolder = 'f(x)';
   const [f_func, setF_func] = useState<string>('t-1');
   const [phi_func, setPhi_func] = useState<string>('t+4');
 
-  const [linear, setLinear] = useState<boolean>(true);
+  const [linear, setLinear] = useState<string>("true");
 
   const [alertOpen, setAlertOpen] = useState<boolean>(false);
   const [alertMessage, setAlertMessage] = useState<string>('');
@@ -146,6 +148,10 @@ export const SecondOrder: React.FC = () => {
     setDiagramModalVisible(!diagramModalVisible);
   }
 
+  const handleLinearChange = (e: any) => {
+    setLinear(e.target.value);
+  }
+
   return (
     <>
       <Box sx={{ height: '97vh', width: '100%', overflow: 'auto' }} className='order'>
@@ -162,6 +168,12 @@ export const SecondOrder: React.FC = () => {
                 pageSize: 10,
               },
             },
+          }}
+          columnVisibilityModel={{
+            tochne: exactValue,
+            euler: euler,
+            kutta: rk4,
+            auto: automation,
           }}
           pageSizeOptions={[10, 50, 100]}
           disableRowSelectionOnClick
@@ -183,7 +195,7 @@ export const SecondOrder: React.FC = () => {
               <MathComponent tex={String.raw`x(t-`} />
               <input required placeholder='τ' value={tau} className='input-value' onChange={(e: any) => setTau(e.target.value)} style={{ width: '36px' }} />
               <MathComponent tex={String.raw`)+`} />
-              <input placeholder='f(x)' value={f_func} className='input-value' onChange={(e: any) => setF_func(e.target.value)} style={{ width: '72px' }} />
+              <input placeholder={linear === 'true' ? f_func_linearPlaceholder : f_func_nonLinearPlaceHolder} value={f_func} className='input-value' onChange={(e: any) => setF_func(e.target.value)} style={{ width: '72px' }} />
             </div>
             <div className='equation'>
               <MathComponent tex={String.raw`t ∈ [`} />
@@ -191,7 +203,7 @@ export const SecondOrder: React.FC = () => {
               <MathComponent tex={String.raw`;`} />
               <input required placeholder='t' value={t_end} className='input-value' onChange={(e: any) => setT_end(e.target.value)} style={{ width: '36px' }} />
               <MathComponent tex={String.raw`]`} />
-              <MathComponent tex={String.raw`,h=`} />
+              <MathComponent tex={String.raw`,m=`} />
               <input required placeholder='h' value={step} className='input-value' onChange={(e: any) => setStep(e.target.value)} style={{ width: '48px' }} />
             </div>
             <div className='equation'>
@@ -203,10 +215,11 @@ export const SecondOrder: React.FC = () => {
               aria-labelledby="demo-radio-buttons-group-label"
               defaultValue="linear"
               name="radio-buttons-group"
-              onChange={(e: any) => setLinear(e.target.value)}
+              value={linear}
+              onChange={(e: any) => handleLinearChange(e)}
             >
-              <FormControlLabel value={true} control={<Radio color='secondary' />} label="Лінійне ДРР" />
-              <FormControlLabel value={false} control={<Radio color='secondary' />} label="Нелінійне ДРР" />
+              <FormControlLabel value="true" control={<Radio color='secondary' />} label="Лінійне ДРР" />
+              <FormControlLabel value="false" control={<Radio color='secondary' />} label="Нелінійне ДРР" />
             </RadioGroup>
 
             <div><FormControl sx={{ m: 3 }} component="fieldset" variant="standard">
@@ -244,7 +257,7 @@ export const SecondOrder: React.FC = () => {
             </FormControl></div>
 
             <div className='submin-container'>
-              <input type="button" value="Графік" className='button-submit' onClick={handleModalVisible} />
+              {rows.length !== 0 && <input type="button" value="Графік" className='button-submit' onClick={handleModalVisible} />}
               <input type="submit" value="Обчислити" className='button-submit' />
             </div>
           </form>
